@@ -1,0 +1,43 @@
+{%- capture html -%}
+<!doctype html>
+<head>
+  <!-- Head content -->
+</head>
+<body>
+  <!-- Body content -->
+</body>
+</html>
+{%- endcapture -%}
+{% capture new_line %}
+{% endcapture %}
+{%- capture space_3 %}   {% endcapture -%}
+{%- capture space_2 %}  {% endcapture -%}
+{%- assign html_tags = 'style,noscript,select,img' | split: ',' -%}
+{%- for html_tag in html_tags -%}
+  {%- assign tag_start = html_tag | prepend: '<' -%}
+  {%- assign tag_end = html_tag | prepend: '</' | append: '>' -%}
+  {%- if html_tag == 'img' -%}
+    {%- assign tag_end = '/>' -%}
+  {%- endif -%}
+  {%- assign line_append = new_line -%}
+  {%- assign html_lines = html | strip | split: new_line -%}
+  {%- assign html = '' -%}
+  {%- for html_line in html_lines -%}
+    {%- assign line = html_line | strip -%}
+    {%- if line == '' -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- if line contains tag_start -%}
+      {%- assign line_append = '' -%}
+      {%- if html_tag == 'img' -%}
+        {%- assign line_append = ' ' -%}
+      {%- endif -%}
+    {%- endif -%}
+    {%- if line contains tag_end -%}
+      {%- assign line_append = new_line -%}
+    {%- endif -%}
+    {%- assign line = line | replace: space_3, ' ' | replace: space_2, ' ' | append: line_append -%}
+    {%- assign html = html | append: line -%}
+  {%- endfor -%}
+{%- endfor -%}
+{{- html -}}

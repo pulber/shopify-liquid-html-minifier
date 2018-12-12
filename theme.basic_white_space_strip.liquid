@@ -1,0 +1,22 @@
+{%- capture html -%}
+<!doctype html>
+<head>
+  <!-- Head content -->
+</head>
+<body>
+  <!-- Body content -->
+</body>
+</html>
+{%- endcapture -%}
+{% capture new_line %}
+{% endcapture %}
+{%- capture space_3 %}   {% endcapture -%}
+{%- capture space_2 %}  {% endcapture -%}
+{%- assign html_lines = html | strip | split: new_line -%}
+{%- for html_line in html_lines -%}
+  {%- assign line = html_line | strip -%}
+  {%- if line == '' -%}
+    {%- continue -%}
+  {%- endif -%}
+  {{- line | replace: space_3, ' ' | replace: space_2, ' ' | append: new_line -}}
+{%- endfor -%}
